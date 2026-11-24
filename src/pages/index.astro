@@ -1,7 +1,9 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
+import { Image } from 'astro:assets';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import { projects } from '../data/projects';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 ---
 
@@ -9,18 +11,187 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 <html lang="ko">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				width: 900px;
+				max-width: calc(100% - 2em);
+			}
+			h1 {
+				margin-bottom: 1rem;
+				font-size: 2em;
+			}
+			.projects {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr);
+				gap: 1.2rem;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			.project {
+				word-break: keep-all;
+				padding: 1.4rem 1.5rem;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 14px;
+				background: #fff;
+			}
+			.project h2 {
+				margin: 0 0 0.5rem;
+				font-size: 1.25em;
+				line-height: 1.35;
+			}
+			.shot {
+				width: 380px;
+				max-width: 100%;
+				margin: 0 0 1.2rem;
+			}
+			.shot img {
+				display: block;
+				width: 100%;
+				height: auto;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 10px;
+			}
+			.shot figcaption {
+				margin-top: 0.35rem;
+				font-size: 0.75em;
+				color: rgb(var(--gray));
+			}
+			.summary {
+				margin: 0 0 1rem;
+				font-size: 0.9em;
+				color: rgb(var(--gray-dark));
+			}
+			.stack {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4rem;
+				margin: 0 0 1rem;
+				padding: 0;
+				list-style: none;
+			}
+			.stack li {
+				padding: 0.15em 0.6em;
+				border-radius: 999px;
+				background: rgba(var(--gray-light), 0.7);
+				font-size: 0.72em;
+				color: rgb(var(--gray-dark));
+			}
+			.actions {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.5rem 1rem;
+			}
+			.links,
+			.posts {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4rem 1rem;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				font-size: 0.85em;
+			}
+			/* 개발일지: 오른쪽 끝, 화살표가 붙은 버튼. 호버하면 네모로 표시되고, 누르면 아래에 글 목록이 펼쳐진다 */
+			.posts-toggle {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.35em;
+				margin-left: auto;
+				padding: 0.3em 0.6em;
+				border: 0;
+				border-radius: 6px;
+				background: transparent;
+				color: rgb(var(--gray-dark));
+				font: inherit;
+				font-size: 0.85em;
+				cursor: pointer;
+				transition: background-color 0.15s;
+			}
+			.posts-toggle:hover {
+				background: rgba(var(--gray-light), 0.8);
+			}
+			.posts-toggle:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 1px;
+			}
+			.chevron {
+				transition: transform 0.15s;
+			}
+			.posts-toggle[aria-expanded='true'] .chevron {
+				transform: rotate(180deg);
+			}
+			.posts {
+				flex-direction: column;
+				gap: 0.4rem;
+				margin-top: 0.8rem;
+				padding-top: 0.8rem;
+				border-top: 1px solid rgb(var(--gray-light));
+			}
+			.posts[hidden] {
+				display: none;
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>개발일지</h1>
-			<p>
-				재난문자를 모으고, 같은 사건끼리 묶고, 관심 지역에 푸시를 보내는 서비스
-				<a href="https://disaster-alert-archive.co.kr/">Disaster Alert Archive</a>를 만들면서
-				내린 결정과 시행착오를 기록합니다.
-			</p>
-			<p><a href="/blog">글 목록 보기</a></p>
+			<h1>프로젝트</h1>
+			<ul class="projects">
+				{
+					projects.map((p, i) => (
+						<li class="project">
+							<h2>{p.name}</h2>
+							<figure class="shot">
+								<Image src={p.image.src} alt={p.image.alt} widths={[380, 760]} sizes="(max-width: 720px) 100vw, 380px" />
+								<figcaption>{p.image.caption}</figcaption>
+							</figure>
+							<p class="summary">{p.summary}</p>
+							<ul class="stack">
+								{p.stack.map((s) => <li>{s}</li>)}
+							</ul>
+							<div class="actions">
+								<ul class="links">
+									{p.links.map((l) => (
+										<li>
+											<a href={l.href}>{l.label}</a>
+										</li>
+									))}
+								</ul>
+								{p.posts.length > 0 && (
+									<button type="button" class="posts-toggle" aria-expanded="false" aria-controls={`posts-${i}`}>
+										<span>개발일지</span>
+										<svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+											<path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+										</svg>
+									</button>
+								)}
+							</div>
+							{p.posts.length > 0 && (
+								<ul class="posts" id={`posts-${i}`} hidden>
+									{p.posts.map((post) => (
+										<li>
+											<a href={post.href}>{post.title}</a>
+										</li>
+									))}
+								</ul>
+							)}
+						</li>
+					))
+				}
+			</ul>
 		</main>
 		<Footer />
+		<script>
+			document.querySelectorAll<HTMLButtonElement>('.posts-toggle').forEach((button) => {
+				const list = document.getElementById(button.getAttribute('aria-controls') ?? '');
+				button.addEventListener('click', () => {
+					const open = button.getAttribute('aria-expanded') === 'true';
+					button.setAttribute('aria-expanded', String(!open));
+					if (list) list.hidden = open;
+				});
+			});
+		</script>
 	</body>
 </html>
