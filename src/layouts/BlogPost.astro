@@ -29,12 +29,103 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				border-radius: 12px;
 				box-shadow: var(--box-shadow);
 			}
+			/* 본문은 넓게, 글자는 작게 — 한 줄에 더 많은 글자가 들어가 좌우 여백이 덜 남는다 */
 			.prose {
-				width: 720px;
+				width: 900px;
 				max-width: calc(100% - 2em);
 				margin: auto;
 				padding: 1em;
 				color: rgb(var(--gray-dark));
+				font-size: 17px;
+				line-height: 1.75;
+			}
+			.prose :global(h2) {
+				font-size: 1.6em;
+				margin-top: 2.2em;
+			}
+			.prose :global(h3) {
+				font-size: 1.25em;
+				margin-top: 1.6em;
+			}
+			.prose :global(table) {
+				width: 100%;
+				font-size: 0.93em;
+				border-collapse: collapse;
+				margin: 1em 0;
+			}
+			.prose :global(th),
+			.prose :global(td) {
+				border-bottom: 1px solid rgb(var(--gray-light));
+				padding: 0.45em 0.6em;
+				vertical-align: top;
+			}
+			.prose :global(th) {
+				background: rgba(var(--gray-light), 0.5);
+				text-align: left;
+			}
+			/* 글 맨 위 목차: 얇은 가로줄로만 나누고, 줄 전체가 링크 */
+			.prose :global(.toc) {
+				margin: 0 0 2.5em;
+				border-top: 1px solid rgb(var(--gray-light));
+			}
+			.prose :global(.toc ol) {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+			.prose :global(.toc li) {
+				margin: 0;
+				border-bottom: 1px solid rgb(var(--gray-light));
+			}
+			.prose :global(.toc a) {
+				display: flex;
+				gap: 0.8em;
+				align-items: baseline;
+				padding: 0.65em 0.4em;
+				text-decoration: none;
+				color: inherit;
+				transition: background-color 0.15s;
+			}
+			.prose :global(.toc a:hover) {
+				background: rgba(var(--gray-light), 0.45);
+			}
+			.prose :global(.toc a:hover strong) {
+				color: var(--accent);
+			}
+			.prose :global(.toc-num) {
+				flex: none;
+				font-size: 0.85em;
+				font-weight: 700;
+				color: rgb(var(--black));
+				font-variant-numeric: tabular-nums;
+			}
+			.prose :global(.toc-text) {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: baseline;
+				column-gap: 0.75em;
+				row-gap: 0.1em;
+				line-height: 1.45;
+				word-break: keep-all;
+			}
+			.prose :global(.toc-text strong) {
+				font-size: 0.95em;
+				color: rgb(var(--black));
+				transition: color 0.15s;
+			}
+			.prose :global(.toc-text span) {
+				font-size: 0.82em;
+				color: rgb(var(--gray));
+			}
+			@media (max-width: 720px) {
+				.prose {
+					max-width: 100%;
+					padding: 0.5em 0;
+					font-size: 16px;
+				}
+				.prose :global(.toc-text) {
+					flex-direction: column;
+				}
 			}
 			.title {
 				margin-bottom: 1em;
@@ -44,6 +135,9 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			}
 			.title h1 {
 				margin: 0 0 0.5em 0;
+				font-size: 2em;
+				line-height: 1.35;
+				word-break: keep-all;
 			}
 			.date {
 				margin-bottom: 0.5em;
