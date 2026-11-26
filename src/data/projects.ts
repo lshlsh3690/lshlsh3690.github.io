@@ -30,7 +30,7 @@ export const projects: Project[] = [
 		],
 		posts: [
 			{
-				title: '재난문자 묶기가 맞는지 어떻게 확인할까 (1) — 정답 272쌍과 흔들린 기준',
+				title: '재난문자 묶기가 맞는지 어떻게 확인할까 (1) — 정답셋 만들어서 성능 측정하기',
 				href: '/blog/clustering-evaluation/',
 			},
 		],
